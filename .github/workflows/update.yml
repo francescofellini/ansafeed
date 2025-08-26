@@ -21,7 +21,16 @@ jobs:
           pip install feedparser requests beautifulsoup4
 
       - name: Esegui script
-        run: python generate_rss.py
+        run: |
+          python generate_rss.py
+          # Verifica che il file XML sia stato creato
+          if [ -f "ansa_sport_enriched.xml" ]; then
+            echo "✅ File XML generato correttamente"
+            cat ansa_sport_enriched.xml | head -20  # Mostra le prime righe
+          else
+            echo "❌ ERRORE: Il file ansa_sport_enriched.xml NON è stato creato!"
+            exit 1
+          fi
 
       - name: Pubblica su GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -29,5 +38,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          commit_message: Aggiornato feed ANSA $(date)
-          force_orphan: true
+          commit_message: ${{ github.workflow }} ${{ github.event_name }}: ${{ github.sha }}
+          force_orphan: true  # Forza la creazione del branch gh-pages
