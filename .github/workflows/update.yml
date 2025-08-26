@@ -17,17 +17,16 @@ jobs:
           python-version: '3.11'
 
       - name: Installa dipendenze
-        run: |
-          pip install feedparser requests beautifulsoup4
+        run: pip install feedparser requests beautifulsoup4
 
       - name: Esegui script
         run: |
           python generate_rss.py
-          if [ -f "ansa_sport_enriched.xml" ]; then
-            echo "✅ File XML generato"
-            head -20 ansa_sport_enriched.xml
+          if [ -f ansa_sport_enriched.xml ]; then
+            echo "✅ OK: Feed generato"
+            head -n 5 ansa_sport_enriched.xml
           else
-            echo "❌ ERRORE: file XML non creato"
+            echo "❌ ERRORE: File XML non creato!"
             exit 1
           fi
 
@@ -37,5 +36,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          commit_message: ${{ github.workflow }}: ${{ github.event_name }}
           force_orphan: true
