@@ -39,4 +39,4 @@ jobs:
           publish_dir: ./
           publish_branch: gh-pages
           commit_message: ${{ github.workflow }} ${{ github.event_name }}: ${{ github.sha }}
-          force_orphan: true  # Forza la creazione del branch gh-pages
+          force_orphan: true
