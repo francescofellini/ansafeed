@@ -3,7 +3,7 @@ name: Aggiorna Feed ANSA
 on:
   schedule:
     - cron: '0 */3 * * *'   # Ogni 3 ore
-  workflow_dispatch:         # Manuale
+  workflow_dispatch:         # Avvio manuale
 
 jobs:
   build:
@@ -21,9 +21,7 @@ jobs:
           pip install feedparser requests beautifulsoup4
 
       - name: Esegui script
-        run: |
-          python generate_rss.py
-          cat ansa_sport_enriched.xml  # Mostra il contenuto per debug
+        run: python generate_rss.py
 
       - name: Pubblica su GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -31,5 +29,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          commit_message: ${{ github.workflow }} ${{ github.event_name }}: ${{ github.sha }}
-          force_orphan: true  # Forza la creazione del branch
+          commit_message: Aggiornato feed ANSA $(date)
+          force_orphan: true
