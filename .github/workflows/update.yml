@@ -24,7 +24,7 @@ jobs:
           python generate_rss.py
           if [ -f ansa_sport_enriched.xml ]; then
             echo "✅ OK: Feed generato"
-            head -n 5 ansa_sport_enriched.xml
+            head -n 3 ansa_sport_enriched.xml
           else
             echo "❌ ERRORE: File XML non creato!"
             exit 1
@@ -36,6 +36,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
-          commit_message: ${{ github.workflow }}: Aggiornato feed ANSA
           force_orphan: true
-          keep_files: true
