@@ -36,4 +36,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
           publish_branch: gh-pages
+          commit_message: ${{ github.workflow }}: Aggiornato feed ANSA
           force_orphan: true
+          keep_files: true
