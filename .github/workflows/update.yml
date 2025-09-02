@@ -21,31 +21,32 @@ jobs:
       - name: Installa dipendenze
         run: pip install feedparser requests beautifulsoup4
 
-      - name: Esegui script
+      - name: Genera il feed
         run: |
           python generate_rss.py
           if [ -f ansa_sport_enriched.xml ]; then
-            echo "✅ OK: Feed generato"
+            echo "✅ Feed generato"
             head -n 3 ansa_sport_enriched.xml
           else
-            echo "❌ ERRORE: File XML non creato!"
+            echo "❌ ERRORE: file XML non creato"
             exit 1
           fi
 
-      - name: Passa a gh-pages e aggiorna il file
+      - name: Pubblica su gh-pages
         run: |
-          git config user.name "francescofellini"
-          git config user.email "francesco.fellini@example.com"
-          
-          # Passa al branch gh-pages, crealo se non esiste
-          git checkout gh-pages || git checkout -b gh-pages
-          
-          # Sovrascrivi il file con quello nuovo
-          cp ../main/ansa_sport_enriched.xml . || cp ansa_sport_enriched.xml .
-          
-          # Aggiungi e committa
+          git config --global user.name "francescofellini"
+          git config --global user.email "francesco.fellini@example.com"
+
+          # Crea una cartella temporanea per il branch gh-pages
+          git clone --branch gh-pages https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/francescofellini/ansafeed.git gh-pages || git init gh-pages
+
+          # Copia il file XML nella cartella gh-pages
+          cp ansa_sport_enriched.xml gh-pages/
+
+          # Entra nella cartella e fai commit
+          cd gh-pages
           git add ansa_sport_enriched.xml
-          git commit -m "Aggiornato feed ANSA $(date)" || echo "Nessun cambiamento da committare"
+          git commit -m "Aggiornato feed ANSA $(date)" || echo "Nessuna modifica"
           
           # Push
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/francescofellini/ansafeed.git gh-pages
