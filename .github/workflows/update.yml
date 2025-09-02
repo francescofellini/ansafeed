@@ -32,20 +32,20 @@ jobs:
             exit 1
           fi
 
-      - name: Pubblica su gh-pages
+      - name: Passa a gh-pages e aggiorna il file
         run: |
           git config user.name "francescofellini"
           git config user.email "francesco.fellini@example.com"
           
-          # Crea o entra nel branch gh-pages
-          git checkout -B gh-pages || exit 1
+          # Passa al branch gh-pages, crealo se non esiste
+          git checkout gh-pages || git checkout -b gh-pages
           
-          # Copia il file XML nella root
-          cp ansa_sport_enriched.xml . || exit 1
+          # Sovrascrivi il file con quello nuovo
+          cp ../main/ansa_sport_enriched.xml . || cp ansa_sport_enriched.xml .
           
           # Aggiungi e committa
           git add ansa_sport_enriched.xml
-          git commit -m "Aggiornato feed ANSA $(date)" || exit 1
+          git commit -m "Aggiornato feed ANSA $(date)" || echo "Nessun cambiamento da committare"
           
-          # Push forzato
-          git push --force https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/francescofellini/ansafeed.git gh-pages
+          # Push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/francescofellini/ansafeed.git gh-pages
